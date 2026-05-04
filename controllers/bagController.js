@@ -37,11 +37,18 @@ exports.updateBag = async (req, res) => {
   }
 };
 
-// DELETE by Gate
-exports.deleteByGate = async (req, res) => {
+exports.deleteBagById = async (req, res) => {
   try {
-    await Bag.deleteMany({ deliverGate: req.params.gate });
-    res.json({ message: 'Bags dropped off at ' });
+    const deleted = await Bag.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ error: "Bag not found" });
+    }
+
+    res.json({
+      message: `Bag ${req.params.id} deleted successfully`
+    });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

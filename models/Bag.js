@@ -16,6 +16,6 @@ router.get('/:id', authJwtController.isAuthenticated, bagController.getBagById);
 router.put('/:id', authJwtController.isAuthenticated, bagController.updateBag);
 
 // DELETE BY GATE
-router.delete('/gate/:gate', authJwtController.isAuthenticated, bagController.deleteByGate);
+router.delete('/:id', authJwtController.isAuthenticated, bagController.deleteBagById);
 
 module.exports = router;
