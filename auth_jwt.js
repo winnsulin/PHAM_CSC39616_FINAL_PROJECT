@@ -1,25 +1,14 @@
-var passport = require('passport');
-var JwtStrategy = require('passport-jwt').Strategy;
-var ExtractJwt = require('passport-jwt').ExtractJwt;
-var User = require('./Users');
-
-var opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
-opts.secretOrKey = process.env.SECRET_KEY;
-
-passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
-    try {
-        const user = await User.findById(jwt_payload.id);
-        
-        if (user) {
-            return done(null, user);
-        } else {
-            return done(null, false);
-        }
-    } catch (err) {
-        return done(err, false);
+export function submitLogin(user) {
+  return fetch(`${process.env.REACT_APP_API_URL}/signin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.token) {
+      localStorage.setItem("token", data.token);
     }
-}));
-
-exports.isAuthenticated = passport.authenticate('jwt', { session : false });
-exports.secret = opts.secretOrKey ;
+    return data;
+  });
+}
